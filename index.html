@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Technology Business Strategist OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ── IBM Carbon Design System tokens ── */
+:root {
+  --cds-background:          #f4f4f4;
+  --cds-layer-01:            #ffffff;
+  --cds-layer-02:            #e8e8e8;
+  --cds-layer-03:            #f4f4f4;
+  --cds-border-subtle-01:    #e0e0e0;
+  --cds-border-subtle-02:    #c6c6c6;
+  --cds-text-primary:        #161616;
+  --cds-text-secondary:      #525252;
+  --cds-text-placeholder:    #a8a8a8;
+  --cds-text-disabled:       #c6c6c6;
+  --cds-interactive:         #0f62fe;
+  --cds-interactive-hover:   #0353e9;
+  --cds-focus:               #0f62fe;
+  --cds-support-success:     #24a148;
+  --cds-highlight:           #d0e2ff;
+  --cds-tag-blue-bg:         #d0e2ff;
+  --cds-tag-blue-text:       #0043ce;
+  --cds-tag-green-bg:        #defbe6;
+  --cds-tag-green-text:      #0e6027;
+  --cds-tag-teal-bg:         #d9fbfb;
+  --cds-tag-teal-text:       #004144;
+  --cds-tag-purple-bg:       #e8daff;
+  --cds-tag-purple-text:     #491d8b;
+  --cds-tag-warm-gray-bg:    #f5f5f5;
+  --cds-tag-warm-gray-text:  #565151;
+  --spacing-01: 2px;
+  --spacing-02: 4px;
+  --spacing-03: 8px;
+  --spacing-04: 12px;
+  --spacing-05: 16px;
+  --spacing-06: 24px;
+  --spacing-07: 32px;
+  --spacing-08: 40px;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans KR', 'IBM Plex Sans', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+  min-height: 100vh;
+}
+
+/* ── Page Header ── */
+.page-header {
+  background: #161616;
+  color: #ffffff;
+  padding: var(--spacing-06) var(--spacing-07);
+  border-bottom: 1px solid #393939;
+}
+.page-header h1 {
+  font-size: 20px;
+  font-weight: 400;
+  color: #ffffff;
+}
+.page-header .subtitle {
+  font-size: 12px;
+  color: #a8a8a8;
+  margin-top: var(--spacing-01);
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 1312px;
+  margin: 0 auto;
+  padding: var(--spacing-06) var(--spacing-07);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-06);
+}
+
+/* ── Tile ── */
+.tile {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+.tile-header {
+  padding: var(--spacing-05) var(--spacing-06);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tile-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.16px;
+}
+.tile-body {
+  padding: var(--spacing-06);
+}
+
+/* ── KPI Grid ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--cds-border-subtle-01);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+.kpi-cell {
+  background: var(--cds-layer-01);
+  padding: var(--spacing-06);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-02);
+}
+.kpi-label {
+  font-size: 12px;
+  letter-spacing: 0.32px;
+  color: var(--cds-text-secondary);
+  text-transform: uppercase;
+}
+.kpi-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+/* ── Progress ── */
+.progress-wrapper {
+  padding: var(--spacing-05) var(--spacing-06) var(--spacing-06);
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  border-top: none;
+}
+.progress-label {
+  font-size: 12px;
+  color: var(--cds-text-secondary);
+  letter-spacing: 0.32px;
+  margin-bottom: var(--spacing-03);
+}
+.progress-track {
+  height: 8px;
+  background: var(--cds-layer-02);
+}
+.progress-fill {
+  height: 100%;
+  background: var(--cds-interactive);
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+/* ── Filter ── */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-04);
+  flex-wrap: wrap;
+}
+.filter-label {
+  font-size: 12px;
+  color: var(--cds-text-secondary);
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.cds-select { position: relative; display: inline-block; }
+.cds-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--cds-layer-02);
+  border: 1px solid var(--cds-border-subtle-02);
+  border-bottom-color: var(--cds-text-secondary);
+  color: var(--cds-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 0 var(--spacing-08) 0 var(--spacing-05);
+  height: 40px;
+  cursor: pointer;
+  outline: none;
+  min-width: 160px;
+}
+.cds-select select:focus {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+.cds-select::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--cds-text-primary);
+  pointer-events: none;
+}
+
+/* ── Data Table ── */
+.cds-table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+
+thead tr {
+  background: var(--cds-layer-02);
+  border-top: 1px solid var(--cds-border-subtle-01);
+  border-bottom: 2px solid var(--cds-border-subtle-02);
+}
+th {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  color: var(--cds-text-secondary);
+  text-transform: uppercase;
+  padding: var(--spacing-04) var(--spacing-05);
+  text-align: left;
+  white-space: nowrap;
+}
+tbody tr.task-row {
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  transition: background 0.1s;
+}
+tbody tr.task-row:hover { background: var(--cds-highlight); }
+
+td {
+  font-size: 14px;
+  padding: var(--spacing-04) var(--spacing-05);
+  color: var(--cds-text-primary);
+  vertical-align: middle;
+}
+
+/* ── Expand row ── */
+tbody tr.detail-row {
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  background: var(--cds-layer-03);
+}
+tbody tr.detail-row td {
+  padding: var(--spacing-04) var(--spacing-05) var(--spacing-05);
+}
+tbody tr.detail-row.hidden { display: none; }
+
+.detail-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-05);
+}
+
+/* Completed row style */
+tr.row-completed td { color: var(--cds-text-disabled); text-decoration: line-through; }
+tr.row-completed td:first-child,
+tr.row-completed td:last-child { text-decoration: none; }
+
+/* ── Expand toggle button ── */
+.btn-expand {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  color: var(--cds-text-secondary);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 0;
+  transition: color 0.1s;
+}
+.btn-expand:hover { color: var(--cds-interactive); }
+.btn-expand:focus { outline: 2px solid var(--cds-focus); outline-offset: 1px; }
+.btn-expand svg { transition: transform 0.2s; }
+.btn-expand.open svg { transform: rotate(180deg); }
+
+/* ── Inline field label ── */
+.field-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  color: var(--cds-text-secondary);
+  margin-bottom: var(--spacing-02);
+}
+
+/* ── Inline textarea ── */
+.inline-textarea {
+  width: 100%;
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-02);
+  border-bottom-color: var(--cds-text-secondary);
+  color: var(--cds-text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: var(--spacing-03) var(--spacing-04);
+  resize: vertical;
+  min-height: 72px;
+  outline: none;
+}
+.inline-textarea:focus {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+.inline-textarea::placeholder { color: var(--cds-text-placeholder); }
+
+/* ── Inline link input ── */
+.inline-input {
+  width: 100%;
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-02);
+  border-bottom-color: var(--cds-text-secondary);
+  color: var(--cds-text-primary);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  padding: 0 var(--spacing-04);
+  height: 36px;
+  outline: none;
+  margin-bottom: var(--spacing-03);
+}
+.inline-input:focus {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+.inline-input::placeholder { color: var(--cds-text-placeholder); font-family: inherit; }
+
+.link-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--cds-interactive);
+  text-decoration: none;
+}
+.link-open:hover { text-decoration: underline; }
+
+/* ── Tag ── */
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.tag--blue   { background: var(--cds-tag-blue-bg);      color: var(--cds-tag-blue-text); }
+.tag--green  { background: var(--cds-tag-green-bg);     color: var(--cds-tag-green-text); }
+.tag--teal   { background: var(--cds-tag-teal-bg);      color: var(--cds-tag-teal-text); }
+.tag--purple { background: var(--cds-tag-purple-bg);    color: var(--cds-tag-purple-text); }
+.tag--gray   { background: var(--cds-tag-warm-gray-bg); color: var(--cds-tag-warm-gray-text); }
+
+/* ── Score badge ── */
+.score-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cds-interactive);
+}
+
+/* ── Checkbox ── */
+.cds-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--cds-interactive);
+  cursor: pointer;
+}
+
+/* ── Bottom insight tile ── */
+.cds-textarea-wrapper label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  color: var(--cds-text-secondary);
+  margin-bottom: var(--spacing-03);
+}
+.cds-textarea {
+  width: 100%;
+  background: var(--cds-layer-02);
+  border: 1px solid var(--cds-border-subtle-02);
+  border-bottom-color: var(--cds-text-secondary);
+  color: var(--cds-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: var(--spacing-04) var(--spacing-05);
+  resize: vertical;
+  min-height: 96px;
+  outline: none;
+}
+.cds-textarea:focus {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+.cds-textarea::placeholder { color: var(--cds-text-placeholder); }
+
+/* ── Responsive ── */
+@media (max-width: 800px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .container { padding: var(--spacing-05); gap: var(--spacing-05); }
+  .page-header { padding: var(--spacing-05); }
+  .detail-inner { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Page Header ── -->
+<header class="page-header">
+  <h1>Technology Business Strategist OS</h1>
+  <p class="subtitle">90-Day Growth System</p>
+</header>
+
+<main class="container">
+
+  <!-- ── KPI Dashboard ── -->
+  <section>
+    <div class="kpi-grid">
+      <div class="kpi-cell">
+        <span class="kpi-label">총 Task</span>
+        <span class="kpi-value" id="totalTask">—</span>
+      </div>
+      <div class="kpi-cell">
+        <span class="kpi-label">완료 Task</span>
+        <span class="kpi-value" id="completedTask">—</span>
+      </div>
+      <div class="kpi-cell">
+        <span class="kpi-label">완료율</span>
+        <span class="kpi-value" id="completionRate">—</span>
+      </div>
+      <div class="kpi-cell">
+        <span class="kpi-label">누적 점수</span>
+        <span class="kpi-value" id="totalScore">—</span>
+      </div>
+    </div>
+    <div class="progress-wrapper">
+      <div class="progress-label">전체 진행률</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Task Table ── -->
+  <section class="tile">
+    <div class="tile-header">
+      <h2>90일 학습 계획</h2>
+      <div class="filter-row">
+        <span class="filter-label">주차 필터</span>
+        <div class="cds-select">
+          <select id="weekFilter">
+            <option value="all">전체</option>
+            <option value="1">1주차</option>
+            <option value="2">2주차</option>
+            <option value="3">3주차</option>
+            <option value="4">4주차</option>
+            <option value="5">5주차</option>
+            <option value="6">6주차</option>
+            <option value="7">7주차</option>
+            <option value="8">8주차</option>
+            <option value="9">9주차</option>
+            <option value="10">10주차</option>
+            <option value="11">11주차</option>
+            <option value="12">12주차</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="cds-table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:48px">완료</th>
+            <th style="width:72px">주차</th>
+            <th style="width:180px">학습 영역</th>
+            <th>Task</th>
+            <th style="width:64px">점수</th>
+            <th style="width:64px">메모</th>
+          </tr>
+        </thead>
+        <tbody id="taskTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+
+</main>
+
+<script>
+const AREA_TAG = {
+  "AI Strategy":              "tag--blue",
+  "Industry":                 "tag--teal",
+  "Tech Company":             "tag--purple",
+  "Finance":                  "tag--green",
+  "Enterprise Architecture":  "tag--blue",
+  "AI Trend":                 "tag--teal",
+  "Consulting":               "tag--purple",
+  "Business Development":     "tag--green",
+  "AI Gateway":               "tag--teal",
+  "Executive":                "tag--gray",
+  "Platform Strategy":        "tag--blue",
+  "AI":                       "tag--teal",
+};
+
+const tasks = [
+  {week:1,area:"AI Strategy",            task:"McKinsey AI 보고서 읽기",        score:5},
+  {week:1,area:"Industry",               task:"금융권 AI 사례 조사",              score:5},
+  {week:1,area:"Tech Company",           task:"Confluent 기업 분석",             score:5},
+  {week:1,area:"Finance",                task:"ROI 개념 학습",                   score:3},
+  {week:1,area:"Enterprise Architecture",task:"Capability Mapping",             score:5},
+
+  {week:2,area:"Tech Company",           task:"Databricks 분석",                score:5},
+  {week:2,area:"Finance",                task:"EBITDA 학습",                     score:3},
+  {week:2,area:"AI Trend",               task:"AI Agent 이해",                   score:5},
+  {week:2,area:"Consulting",             task:"BCG Deck 분석",                   score:5},
+  {week:2,area:"Business Development",   task:"Land & Expand 분석",             score:5},
+
+  {week:3,area:"Tech Company",           task:"Snowflake 분석",                  score:5},
+  {week:3,area:"Finance",                task:"NPV 학습",                        score:3},
+  {week:3,area:"AI Gateway",             task:"AI Gateway 분석",                 score:5},
+  {week:3,area:"Executive",              task:"임원 보고서 작성",                  score:5},
+  {week:3,area:"Platform Strategy",      task:"Platform Strategy 학습",         score:5},
+
+  {week:4,area:"Tech Company",           task:"Palantir 분석",                   score:5},
+  {week:4,area:"Finance",                task:"IRR 학습",                        score:3},
+  {week:4,area:"AI",                     task:"RAG 비즈니스 가치",                score:5},
+  {week:4,area:"Consulting",             task:"Strategy& Deck 분석",            score:5},
+  {week:4,area:"Business Development",   task:"Ecosystem Strategy",             score:5},
+];
+
+// ── State ──
+let completed  = JSON.parse(localStorage.getItem("completed"))      || {};
+let taskNotes  = JSON.parse(localStorage.getItem("taskNotes"))      || {};  // per-task insight
+let taskLinks  = JSON.parse(localStorage.getItem("taskLinks"))      || {};  // per-task link
+
+function save() {
+  localStorage.setItem("completed",  JSON.stringify(completed));
+  localStorage.setItem("taskNotes",  JSON.stringify(taskNotes));
+  localStorage.setItem("taskLinks",  JSON.stringify(taskLinks));
+}
+
+// ── Per-task field handlers ──
+function saveNote(index) {
+  taskNotes[index] = document.getElementById(`note-${index}`).value;
+  save();
+}
+
+function saveLink(index) {
+  taskLinks[index] = document.getElementById(`link-${index}`).value;
+  const anchor = document.getElementById(`link-open-${index}`);
+  const val = taskLinks[index].trim();
+  if (anchor) {
+    anchor.href        = val || "#";
+    anchor.style.display = val ? "inline-flex" : "none";
+  }
+  save();
+}
+
+// ── Expand/collapse detail row ──
+function toggleDetail(index) {
+  const detailRow = document.getElementById(`detail-${index}`);
+  const btn       = document.getElementById(`btn-expand-${index}`);
+  if (!detailRow) return;
+  const isHidden = detailRow.classList.contains("hidden");
+  detailRow.classList.toggle("hidden", !isHidden);
+  btn.classList.toggle("open", isHidden);
+}
+
+function render() {
+  const filter = document.getElementById("weekFilter").value;
+  let html = "";
+
+  tasks.forEach((t, index) => {
+    if (filter !== "all" && String(t.week) !== filter) return;
+
+    const isChecked = completed[index] ? "checked" : "";
+    const rowClass  = completed[index] ? "row-completed" : "";
+    const tagClass  = AREA_TAG[t.area] || "tag--gray";
+    const note      = (taskNotes[index] || "").replace(/"/g, "&quot;");
+    const link      = (taskLinks[index] || "").replace(/"/g, "&quot;");
+    const linkDisplay = link ? "inline-flex" : "none";
+
+    html += `
+      <tr class="task-row ${rowClass}" id="row-${index}">
+        <td><input type="checkbox" class="cds-checkbox" ${isChecked} onchange="toggleTask(${index})"></td>
+        <td>${t.week}주차</td>
+        <td><span class="tag ${tagClass}">${t.area}</span></td>
+        <td>${t.task}</td>
+        <td><span class="score-badge">${t.score}pt</span></td>
+        <td>
+          <button class="btn-expand" id="btn-expand-${index}" onclick="toggleDetail(${index})" title="인사이트 / 링크">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <path d="M6 8.5L1 3h10z"/>
+            </svg>
+            메모
+          </button>
+        </td>
+      </tr>
+      <tr class="detail-row hidden" id="detail-${index}">
+        <td colspan="6">
+          <div class="detail-inner">
+            <div>
+              <div class="field-label">핵심 인사이트</div>
+              <textarea
+                class="inline-textarea"
+                id="note-${index}"
+                placeholder="이 Task에서 얻은 인사이트를 기록하세요."
+                onchange="saveNote(${index})"
+                onkeyup="saveNote(${index})"
+              >${(taskNotes[index] || "")}</textarea>
+            </div>
+            <div>
+              <div class="field-label">참고 링크</div>
+              <input
+                type="url"
+                class="inline-input"
+                id="link-${index}"
+                placeholder="https://..."
+                value="${link}"
+                onchange="saveLink(${index})"
+                onkeyup="saveLink(${index})"
+              >
+              <a
+                id="link-open-${index}"
+                href="${link || '#'}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link-open"
+                style="display:${linkDisplay}"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M10 1H7V2h2.3L4.1 7.2l.7.7L10 2.7V5h1V1h-1zm-8 9V3H5V2H1a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1V7h-1v3H2z"/>
+                </svg>
+                링크 열기
+              </a>
+            </div>
+          </div>
+        </td>
+      </tr>`;
+  });
+
+  document.getElementById("taskTable").innerHTML = html;
+
+  // KPI
+  const overallDone  = Object.values(completed).filter(Boolean).length;
+  let   overallScore = 0;
+  tasks.forEach((t, i) => { if (completed[i]) overallScore += t.score; });
+  const rate = tasks.length ? Math.round(overallDone / tasks.length * 100) : 0;
+
+  document.getElementById("totalTask").textContent      = tasks.length;
+  document.getElementById("completedTask").textContent  = overallDone;
+  document.getElementById("completionRate").textContent = rate + "%";
+  document.getElementById("totalScore").textContent     = overallScore;
+  document.getElementById("progressBar").style.width    = rate + "%";
+
+  save();
+}
+
+function toggleTask(i) {
+  completed[i] = !completed[i];
+  render();
+}
+
+document.getElementById("weekFilter").addEventListener("change", render);
+
+render();
+</script>
+</body>
+</html>
