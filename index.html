@@ -495,7 +495,69 @@ tr.row-completed td:last-child { text-decoration: none; }
 
 </main>
 
-<script>
+<!-- Firebase CDN -->
+<script type="module">
+import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc }    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBjQcJ6xFp3wGNTIqNjyKyYgnPTtRnut8k",
+  authDomain:        "apples-7e54e.firebaseapp.com",
+  projectId:         "apples-7e54e",
+  storageBucket:     "apples-7e54e.firebasestorage.app",
+  messagingSenderId: "219655532110",
+  appId:             "1:219655532110:web:9a112a4d1e1f421cdadd1f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ── 사용자 식별 (브라우저마다 고유 ID 자동 생성) ──
+function getUserId() {
+  let uid = localStorage.getItem("uid");
+  if (!uid) {
+    uid = "user_" + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem("uid", uid);
+  }
+  return uid;
+}
+const USER_ID = getUserId();
+const DOC_REF = doc(db, "taskData", USER_ID);
+
+// ── Firestore에서 데이터 불러오기 ──
+async function loadFromFirestore() {
+  try {
+    const snap = await getDoc(DOC_REF);
+    if (snap.exists()) {
+      const data = snap.data();
+      completed  = data.completed  || {};
+      taskNotes  = data.taskNotes  || {};
+      taskLinks  = data.taskLinks  || {};
+    }
+  } catch (e) {
+    console.warn("Firestore load failed, using localStorage:", e);
+  }
+  render();
+}
+
+// ── Firestore에 저장 (debounce 500ms) ──
+let saveTimer = null;
+async function save() {
+  // localStorage 동시 저장 (오프라인 fallback)
+  localStorage.setItem("completed",  JSON.stringify(completed));
+  localStorage.setItem("taskNotes",  JSON.stringify(taskNotes));
+  localStorage.setItem("taskLinks",  JSON.stringify(taskLinks));
+  // Firestore 저장 debounce
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try {
+      await setDoc(DOC_REF, { completed, taskNotes, taskLinks, updatedAt: new Date().toISOString() });
+    } catch (e) {
+      console.warn("Firestore save failed:", e);
+    }
+  }, 500);
+}
+
 const AREA_TAG = {
   "AI Strategy":              "tag--blue",
   "Industry":                 "tag--teal",
@@ -537,16 +599,10 @@ const tasks = [
   {week:4,area:"Business Development",   task:"Ecosystem Strategy",             score:5},
 ];
 
-// ── State ──
-let completed  = JSON.parse(localStorage.getItem("completed"))      || {};
-let taskNotes  = JSON.parse(localStorage.getItem("taskNotes"))      || {};  // per-task insight
-let taskLinks  = JSON.parse(localStorage.getItem("taskLinks"))      || {};  // per-task link
-
-function save() {
-  localStorage.setItem("completed",  JSON.stringify(completed));
-  localStorage.setItem("taskNotes",  JSON.stringify(taskNotes));
-  localStorage.setItem("taskLinks",  JSON.stringify(taskLinks));
-}
+// ── State (Firestore 로드 전 localStorage fallback) ──
+let completed  = JSON.parse(localStorage.getItem("completed"))  || {};
+let taskNotes  = JSON.parse(localStorage.getItem("taskNotes"))  || {};
+let taskLinks  = JSON.parse(localStorage.getItem("taskLinks"))  || {};
 
 // ── Per-task field handlers ──
 function saveNote(index) {
@@ -672,7 +728,8 @@ function toggleTask(i) {
 
 document.getElementById("weekFilter").addEventListener("change", render);
 
-render();
+// 초기 로드: Firestore → render
+loadFromFirestore();
 </script>
 </body>
 </html>

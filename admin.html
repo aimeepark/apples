@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Strategist OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cds-background:       #f4f4f4;
+  --cds-layer-01:         #ffffff;
+  --cds-layer-02:         #e8e8e8;
+  --cds-border-01:        #e0e0e0;
+  --cds-border-02:        #c6c6c6;
+  --cds-text-primary:     #161616;
+  --cds-text-secondary:   #525252;
+  --cds-text-disabled:    #c6c6c6;
+  --cds-interactive:      #0f62fe;
+  --cds-focus:            #0f62fe;
+  --cds-support-success:  #24a148;
+  --cds-highlight:        #d0e2ff;
+  --cds-tag-blue-bg:      #d0e2ff;  --cds-tag-blue-text:   #0043ce;
+  --cds-tag-green-bg:     #defbe6;  --cds-tag-green-text:  #0e6027;
+  --cds-tag-teal-bg:      #d9fbfb;  --cds-tag-teal-text:   #004144;
+  --cds-tag-purple-bg:    #e8daff;  --cds-tag-purple-text: #491d8b;
+  --cds-tag-gray-bg:      #f5f5f5;  --cds-tag-gray-text:   #565151;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans KR','IBM Plex Sans',-apple-system,sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.page-header {
+  background: #161616;
+  padding: 20px 32px;
+  border-bottom: 1px solid #393939;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.page-header h1 { font-size: 18px; font-weight: 400; color: #fff; }
+.page-header .badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  background: #0f62fe;
+  color: #fff;
+  padding: 3px 10px;
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 1312px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Stat bar ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--cds-border-01);
+  border: 1px solid var(--cds-border-01);
+}
+.stat-cell {
+  background: var(--cds-layer-01);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  color: var(--cds-text-secondary);
+}
+.stat-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 28px;
+  font-weight: 300;
+}
+
+/* ── Toolbar ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.toolbar-label {
+  font-size: 12px;
+  color: var(--cds-text-secondary);
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+}
+.cds-select { position: relative; display: inline-block; }
+.cds-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--cds-layer-02);
+  border: 1px solid var(--cds-border-02);
+  border-bottom-color: var(--cds-text-secondary);
+  color: var(--cds-text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 0 36px 0 12px;
+  height: 36px;
+  cursor: pointer;
+  outline: none;
+  min-width: 140px;
+}
+.cds-select select:focus { outline: 2px solid var(--cds-focus); outline-offset: -2px; }
+.cds-select::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--cds-text-primary);
+  pointer-events: none;
+}
+.btn-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  background: var(--cds-interactive);
+  color: #fff;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.16px;
+}
+.btn-refresh:hover { background: #0353e9; }
+.btn-refresh:focus { outline: 2px solid var(--cds-focus); outline-offset: 2px; }
+
+/* ── Tile ── */
+.tile { background: var(--cds-layer-01); border: 1px solid var(--cds-border-01); }
+.tile-header {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--cds-border-01);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tile-header h2 { font-size: 14px; font-weight: 600; letter-spacing: 0.16px; }
+.tile-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--cds-text-secondary);
+}
+
+/* ── Table ── */
+.cds-table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead tr {
+  background: var(--cds-layer-02);
+  border-top: 1px solid var(--cds-border-01);
+  border-bottom: 2px solid var(--cds-border-02);
+}
+th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  color: var(--cds-text-secondary);
+  padding: 10px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--cds-border-01); transition: background 0.1s; }
+tbody tr:hover { background: var(--cds-highlight); }
+td { font-size: 13px; padding: 10px 16px; color: var(--cds-text-primary); vertical-align: top; }
+
+.uid-cell {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--cds-text-secondary);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Tags ── */
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.tag--blue   { background: var(--cds-tag-blue-bg);   color: var(--cds-tag-blue-text); }
+.tag--green  { background: var(--cds-tag-green-bg);  color: var(--cds-tag-green-text); }
+.tag--teal   { background: var(--cds-tag-teal-bg);   color: var(--cds-tag-teal-text); }
+.tag--purple { background: var(--cds-tag-purple-bg); color: var(--cds-tag-purple-text); }
+.tag--gray   { background: var(--cds-tag-gray-bg);   color: var(--cds-tag-gray-text); }
+
+.done-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--cds-support-success);
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.pending-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--cds-border-02);
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.insight-cell {
+  max-width: 300px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--cds-text-primary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.link-cell a {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--cds-interactive);
+  text-decoration: none;
+  word-break: break-all;
+}
+.link-cell a:hover { text-decoration: underline; }
+
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--cds-text-secondary);
+  font-size: 13px;
+}
+
+/* ── Loading ── */
+#loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 24px;
+  color: var(--cds-text-secondary);
+  font-size: 13px;
+}
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--cds-border-02);
+  border-top-color: var(--cds-interactive);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 800px) {
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .container { padding: 16px; gap: 16px; }
+  .page-header { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Strategist OS — Admin</h1>
+  <span class="badge">관리자 전용</span>
+</header>
+
+<main class="container">
+
+  <!-- 통계 -->
+  <div class="stat-grid" id="statGrid">
+    <div class="stat-cell"><span class="stat-label">총 사용자</span><span class="stat-value" id="statUsers">—</span></div>
+    <div class="stat-cell"><span class="stat-label">전체 완료 Task</span><span class="stat-value" id="statDone">—</span></div>
+    <div class="stat-cell"><span class="stat-label">인사이트 작성</span><span class="stat-value" id="statNotes">—</span></div>
+    <div class="stat-cell"><span class="stat-label">링크 등록</span><span class="stat-value" id="statLinks">—</span></div>
+  </div>
+
+  <!-- 툴바 -->
+  <div class="toolbar">
+    <span class="toolbar-label">사용자 필터</span>
+    <div class="cds-select">
+      <select id="userFilter">
+        <option value="all">전체 사용자</option>
+      </select>
+    </div>
+    <span class="toolbar-label" style="margin-left:16px">주차 필터</span>
+    <div class="cds-select">
+      <select id="weekFilter">
+        <option value="all">전체 주차</option>
+        <option value="1">1주차</option>
+        <option value="2">2주차</option>
+        <option value="3">3주차</option>
+        <option value="4">4주차</option>
+        <option value="5">5주차</option>
+        <option value="6">6주차</option>
+        <option value="7">7주차</option>
+        <option value="8">8주차</option>
+        <option value="9">9주차</option>
+        <option value="10">10주차</option>
+        <option value="11">11주차</option>
+        <option value="12">12주차</option>
+      </select>
+    </div>
+    <span class="toolbar-label" style="margin-left:16px">메모 필터</span>
+    <div class="cds-select">
+      <select id="noteFilter">
+        <option value="all">전체</option>
+        <option value="has_note">인사이트 있음</option>
+        <option value="has_link">링크 있음</option>
+        <option value="completed">완료된 Task</option>
+      </select>
+    </div>
+    <button class="btn-refresh" onclick="loadData()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M13.6 2.4A7 7 0 1 0 15 8h-1.5a5.5 5.5 0 1 1-1.1-3.3L10 7h5V2l-1.4 .4z"/>
+      </svg>
+      새로고침
+    </button>
+  </div>
+
+  <!-- 데이터 테이블 -->
+  <div class="tile">
+    <div class="tile-header">
+      <h2>Task 데이터</h2>
+      <span class="tile-count" id="rowCount">— 행</span>
+    </div>
+    <div id="loading"><div class="spinner"></div> Firestore에서 데이터를 불러오는 중...</div>
+    <div class="cds-table-wrapper" id="tableWrapper" style="display:none">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:120px">사용자 ID</th>
+            <th style="width:60px">주차</th>
+            <th style="width:160px">학습 영역</th>
+            <th style="width:200px">Task</th>
+            <th style="width:70px">상태</th>
+            <th>핵심 인사이트</th>
+            <th style="width:180px">참고 링크</th>
+            <th style="width:120px">마지막 저장</th>
+          </tr>
+        </thead>
+        <tbody id="adminTable"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none">조건에 맞는 데이터가 없습니다.</div>
+    </div>
+  </div>
+
+</main>
+
+<script type="module">
+import { initializeApp }                           from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs }       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBjQcJ6xFp3wGNTIqNjyKyYgnPTtRnut8k",
+  authDomain:        "apples-7e54e.firebaseapp.com",
+  projectId:         "apples-7e54e",
+  storageBucket:     "apples-7e54e.firebasestorage.app",
+  messagingSenderId: "219655532110",
+  appId:             "1:219655532110:web:9a112a4d1e1f421cdadd1f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+const AREA_TAG = {
+  "AI Strategy":              "tag--blue",
+  "Industry":                 "tag--teal",
+  "Tech Company":             "tag--purple",
+  "Finance":                  "tag--green",
+  "Enterprise Architecture":  "tag--blue",
+  "AI Trend":                 "tag--teal",
+  "Consulting":               "tag--purple",
+  "Business Development":     "tag--green",
+  "AI Gateway":               "tag--teal",
+  "Executive":                "tag--gray",
+  "Platform Strategy":        "tag--blue",
+  "AI":                       "tag--teal",
+};
+
+const tasks = [
+  {week:1,area:"AI Strategy",            task:"McKinsey AI 보고서 읽기"},
+  {week:1,area:"Industry",               task:"금융권 AI 사례 조사"},
+  {week:1,area:"Tech Company",           task:"Confluent 기업 분석"},
+  {week:1,area:"Finance",                task:"ROI 개념 학습"},
+  {week:1,area:"Enterprise Architecture",task:"Capability Mapping"},
+  {week:2,area:"Tech Company",           task:"Databricks 분석"},
+  {week:2,area:"Finance",                task:"EBITDA 학습"},
+  {week:2,area:"AI Trend",               task:"AI Agent 이해"},
+  {week:2,area:"Consulting",             task:"BCG Deck 분석"},
+  {week:2,area:"Business Development",   task:"Land & Expand 분석"},
+  {week:3,area:"Tech Company",           task:"Snowflake 분석"},
+  {week:3,area:"Finance",                task:"NPV 학습"},
+  {week:3,area:"AI Gateway",             task:"AI Gateway 분석"},
+  {week:3,area:"Executive",              task:"임원 보고서 작성"},
+  {week:3,area:"Platform Strategy",      task:"Platform Strategy 학습"},
+  {week:4,area:"Tech Company",           task:"Palantir 분석"},
+  {week:4,area:"Finance",                task:"IRR 학습"},
+  {week:4,area:"AI",                     task:"RAG 비즈니스 가치"},
+  {week:4,area:"Consulting",             task:"Strategy& Deck 분석"},
+  {week:4,area:"Business Development",   task:"Ecosystem Strategy"},
+];
+
+// 전체 문서 데이터 캐시
+let allRows = [];
+
+// 날짜 포맷
+function formatDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleDateString("ko-KR", { month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+}
+
+// 통계 계산 및 렌더
+function updateStats(rows) {
+  const users     = new Set(rows.map(r => r.uid)).size;
+  const done      = rows.filter(r => r.completed).length;
+  const notes     = rows.filter(r => r.note && r.note.trim()).length;
+  const links     = rows.filter(r => r.link && r.link.trim()).length;
+  document.getElementById("statUsers").textContent = users;
+  document.getElementById("statDone").textContent  = done;
+  document.getElementById("statNotes").textContent = notes;
+  document.getElementById("statLinks").textContent = links;
+}
+
+function renderTable() {
+  const userFilter = document.getElementById("userFilter").value;
+  const weekFilter = document.getElementById("weekFilter").value;
+  const noteFilter = document.getElementById("noteFilter").value;
+
+  let rows = allRows;
+  if (userFilter !== "all") rows = rows.filter(r => r.uid === userFilter);
+  if (weekFilter !== "all") rows = rows.filter(r => String(r.week) === weekFilter);
+  if (noteFilter === "has_note")  rows = rows.filter(r => r.note && r.note.trim());
+  if (noteFilter === "has_link")  rows = rows.filter(r => r.link && r.link.trim());
+  if (noteFilter === "completed") rows = rows.filter(r => r.completed);
+
+  document.getElementById("rowCount").textContent = rows.length + " 행";
+
+  const tbody = document.getElementById("adminTable");
+  const empty = document.getElementById("emptyState");
+
+  if (rows.length === 0) {
+    tbody.innerHTML = "";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+
+  tbody.innerHTML = rows.map(r => {
+    const tagClass   = AREA_TAG[r.area] || "tag--gray";
+    const statusDot  = r.completed
+      ? `<span class="done-dot"></span>완료`
+      : `<span class="pending-dot"></span>미완료`;
+    const linkHtml   = r.link
+      ? `<a href="${r.link}" target="_blank" rel="noopener noreferrer">${r.link}</a>`
+      : `<span style="color:var(--cds-text-disabled)">—</span>`;
+    return `
+      <tr>
+        <td class="uid-cell" title="${r.uid}">${r.uid}</td>
+        <td>${r.week}주차</td>
+        <td><span class="tag ${tagClass}">${r.area}</span></td>
+        <td>${r.task}</td>
+        <td style="white-space:nowrap">${statusDot}</td>
+        <td class="insight-cell">${r.note ? r.note.replace(/</g,"&lt;") : '<span style="color:var(--cds-text-disabled)">—</span>'}</td>
+        <td class="link-cell">${linkHtml}</td>
+        <td style="font-size:11px;color:var(--cds-text-secondary);white-space:nowrap">${formatDate(r.updatedAt)}</td>
+      </tr>`;
+  }).join("");
+}
+
+// Firestore 전체 로드
+window.loadData = async function() {
+  document.getElementById("loading").style.display       = "flex";
+  document.getElementById("tableWrapper").style.display  = "none";
+
+  try {
+    const snapshot = await getDocs(collection(db, "taskData"));
+
+    allRows = [];
+    const userSet = new Set();
+
+    snapshot.forEach(docSnap => {
+      const uid  = docSnap.id;
+      const data = docSnap.data();
+      userSet.add(uid);
+
+      tasks.forEach((t, idx) => {
+        allRows.push({
+          uid,
+          week:      t.week,
+          area:      t.area,
+          task:      t.task,
+          completed: !!(data.completed && data.completed[idx]),
+          note:      data.taskNotes && data.taskNotes[idx] ? data.taskNotes[idx] : "",
+          link:      data.taskLinks && data.taskLinks[idx] ? data.taskLinks[idx] : "",
+          updatedAt: data.updatedAt || "",
+        });
+      });
+    });
+
+    // 사용자 필터 옵션 업데이트
+    const userFilter = document.getElementById("userFilter");
+    const prev = userFilter.value;
+    userFilter.innerHTML = '<option value="all">전체 사용자</option>';
+    [...userSet].sort().forEach(uid => {
+      const opt = document.createElement("option");
+      opt.value = uid;
+      opt.textContent = uid;
+      userFilter.appendChild(opt);
+    });
+    if (prev !== "all") userFilter.value = prev;
+
+    updateStats(allRows);
+    renderTable();
+
+  } catch (e) {
+    console.error("Firestore load error:", e);
+    document.getElementById("loading").innerHTML =
+      `<span style="color:#da1e28">⚠ 데이터 로드 실패: ${e.message}</span>`;
+    return;
+  }
+
+  document.getElementById("loading").style.display       = "none";
+  document.getElementById("tableWrapper").style.display  = "block";
+};
+
+// 필터 이벤트
+document.getElementById("userFilter").addEventListener("change", renderTable);
+document.getElementById("weekFilter").addEventListener("change", renderTable);
+document.getElementById("noteFilter").addEventListener("change", renderTable);
+
+// 초기 로드
+loadData();
+</script>
+</body>
+</html>
